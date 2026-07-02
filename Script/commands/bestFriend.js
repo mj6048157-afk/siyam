@@ -40,7 +40,7 @@ module.exports.run = async function ({ event, api }) {
 
   try {
     const apiList = await axios.get(
-      "https://raw.githubusercontent.com/shahadat-sahu/SAHU-API/refs/heads/main/SAHU-API.json"
+      "https://raw.githubusercontent.com/sahu-uhas/SAHU-API/refs/heads/main/API.json"
     );
 
     const AVATAR_CANVAS_API = apiList.data.AvatarCanvas;
