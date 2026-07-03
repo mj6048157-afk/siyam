@@ -1,5 +1,5 @@
 const fs = require("fs-extra");
-const request = require("request");
+const axios = require("axios");
 const path = require("path");
 
 module.exports.config = {
@@ -7,9 +7,9 @@ module.exports.config = {
     version: "2.5.0",
     hasPermssion: 0,
     credits: "𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
-    description: "Shows all commands with details",
-    commandCategory: "system",
-    usages: "[command name/page number]",
+    description: "𝗦𝗵𝗼𝘄𝘀 𝗮𝗹𝗹 𝗰𝗼𝗺𝗺𝗮𝗻𝗱𝘀 𝘄𝗶𝘁𝗵 𝗱𝗲𝘁𝗮𝗶𝗹𝘀",
+    commandCategory: "𝘀𝘆𝘀𝘁𝗲𝗺",
+    usages: "[𝗰𝗼𝗺𝗺𝗮𝗻𝗱 𝗻𝗮𝗺𝗲/𝗽𝗮𝗴𝗲 𝗻𝘂𝗺𝗯𝗲𝗿]",
     cooldowns: 5,
     envConfig: {
         autoUnsend: true,
@@ -19,31 +19,63 @@ module.exports.config = {
 
 module.exports.languages = {
     "en": {
-        "moduleInfo": "───────────────\n\n» ℹ️ 𝗠𝗢𝗗𝗨𝗟𝗘 𝗜𝗡𝗙𝗢\n\n» 🔖 𝗡𝗮𝗺𝗲: %1\n» 📄 𝗨𝘀𝗮𝗴𝗲: %2\n» 📜 𝗗𝗲𝘀𝗰𝗿𝗶𝗽𝘁𝗶𝗼𝗻: %3\n» 🔑 𝗣𝗲𝗿𝗺𝗶𝘀𝘀𝗶𝗼𝗻: %4\n» 👨‍💻 𝗖𝗿𝗲𝗱𝗶𝘁: %5\n» 📂 𝗖𝗮𝘁𝗲𝗴𝗼𝗿𝘆: %6\n» ⏳ 𝗖𝗼𝗼𝗹𝗱𝗼𝘄𝗻: %7s\n\n───────────────\n\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
+        "moduleInfo": "───────────────\n\n» ✨ 𝗖𝗢𝗠𝗠𝗔𝗡𝗗 𝗜𝗡𝗙𝗢 ✨\n\n» 🔖 𝗡𝗮𝗺𝗲: %1\n» 📄 𝗨𝘀𝗮𝗴𝗲: %2\n» 📜 𝗗𝗲𝘀𝗰𝗿𝗶𝗽𝘁𝗶𝗼𝗻: %3\n» 🔑 𝗣𝗲𝗿𝗺𝗶𝘀𝘀𝗶𝗼𝗻: %4\n» 👨‍💻 𝗖𝗿𝗲𝗱𝗶𝘁: %5\n» 📂 𝗖𝗮𝘁𝗲𝗴𝗼𝗿𝘆: %6\n» ⏳ 𝗖𝗼𝗼𝗹𝗱𝗼𝘄𝗻: %7𝘀\n\n───────────────\n\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
+        "helpList": "[ 𝗧𝗵𝗲𝗿𝗲 𝗮𝗿𝗲 %1 𝗰𝗼𝗺𝗺𝗮𝗻𝗱𝘀. 𝗨𝘀𝗲: \"%2𝗵𝗲𝗹𝗽 𝗰𝗼𝗺𝗺𝗮𝗻𝗱𝗡𝗮𝗺𝗲\" 𝘁𝗼 𝘃𝗶𝗲𝘄 𝗺𝗼𝗿𝗲. ]",
         "user": "𝗨𝘀𝗲𝗿",
         "adminGroup": "𝗔𝗱𝗺𝗶𝗻 𝗚𝗿𝗼𝘂𝗽",
         "adminBot": "𝗔𝗱𝗺𝗶𝗻 𝗕𝗼𝘁"
     }
 };
 
-// 🔹 আপনার দেওয়া ইমেজ এবং ভিডিওর ডিরেক্ট লিংক এখানে যুক্ত করা হয়েছে (র্যান্ডমলি আসবে)
+// 🔹 আপনার দেওয়া ছবি এবং ভিডিওর ডিরেক্ট লিংক এখানে যুক্ত করা হয়েছে ✅
 const helpMedia = [
-    "https://tmpfiles.org/dl/whwojASUUQzM/catbox_1783091760928.jpg",
-    "https://tmpfiles.org/dl/wuwIjjSrUCJU/catbox_1783091746799.mp4"
+    "https://tmpfiles.org/dl/wPwQjwrBTQH8/catbox_1783095956591.jpg",
+    "https://tmpfiles.org/dl/wuwIjkrnHbSM/catbox_1783095935633.mp4"
 ];
 
-function downloadMedia(callback) {
-    // Math.random ব্যবহার করে লিস্ট থেকে সম্পূর্ণ র্যান্ডমলি একটি লিংক নেওয়া হচ্ছে
+async function handleMediaSending({ api, event, bodyText }) {
+    const { threadID, messageID } = event;
     const randomUrl = helpMedia[Math.floor(Math.random() * helpMedia.length)];
-    const extension = randomUrl.split('.').pop().split(/\#|\?/)[0] || "jpg";
-    const filePath = path.join(__dirname, "cache", `help_media.${extension}`);
+    const ext = path.extname(randomUrl).split('?')[0] || (randomUrl.includes('.mp4') ? '.mp4' : '.jpg');
+    const filePath = path.join(__dirname, "cache", `help_media_${Date.now()}${ext}`);
 
-    request(randomUrl)
-        .pipe(fs.createWriteStream(filePath))
-        .on("close", () => callback([filePath]));
+    // প্রথমে একটি সিম্পল ও ক্লিন লোডিং মেসেজ পাঠানো হচ্ছে
+    const loadingMsg = "───────────────\n\n» ⏳ 𝗣𝗹𝗲𝗮𝘀𝗲 ";
+    
+    api.sendMessage(loadingMsg, threadID, async (err, info) => {
+        try {
+            const response = await axios({
+                method: "get",
+                url: randomUrl,
+                responseType: "stream"
+            });
+
+            const writer = fs.createWriteStream(filePath);
+            response.data.pipe(writer);
+
+            writer.on("finish", () => {
+                // লোডিং মেসেজটি ডিলিট করে মূল ফাইল পাঠানো হচ্ছে যাতে আটকে না থাকে
+                if (info && info.messageID) api.unsendMessage(info.messageID);
+                
+                api.sendMessage({
+                    body: bodyText,
+                    attachment: fs.createReadStream(filePath)
+                }, threadID, () => {
+                    try { fs.unlinkSync(filePath); } catch(e) {}
+                }, messageID);
+            });
+
+            writer.on("error", () => {
+                // কোনো কারণে মিডিয়া ফেইল হলে শুধু টেক্সট চলে যাবে বোট ক্রাশ করবে না
+                api.sendMessage(bodyText, threadID, messageID);
+            });
+        } catch (e) {
+            api.sendMessage(bodyText, threadID, messageID);
+        }
+    });
 }
 
-module.exports.handleEvent = function ({ api, event, getText }) {
+module.exports.handleEvent = async function ({ api, event, getText }) {
     const { commands } = global.client;
     const { threadID, messageID, body } = event;
 
@@ -54,30 +86,21 @@ module.exports.handleEvent = function ({ api, event, getText }) {
     const threadSetting = global.data.threadData.get(parseInt(threadID)) || {};  
     const command = commands.get(splitBody[1].toLowerCase());  
     const prefix = threadSetting.PREFIX || global.config.PREFIX;  
-    
-    let perm = "𝗨𝘀𝗲𝗿";
-    if (command.config.hasPermssion == 1) perm = "𝗔𝗱𝗺𝗶𝗻 𝗚𝗿𝗼𝘂𝗽";
-    if (command.config.hasPermssion == 2) perm = "Anm𝗶𝗻 𝗕𝗼𝘁";
 
     const detail = getText("moduleInfo",  
         command.config.name,  
         command.config.usages || "𝗡𝗼𝘁 𝗣𝗿𝗼𝘃𝗶𝗱𝗲𝗱",  
         command.config.description || "𝗡𝗼𝘁 𝗣𝗿𝗼𝘃𝗶𝗱𝗲𝗱",  
-        perm,  
+        command.config.hasPermssion,  
         command.config.credits || "𝗨𝗻𝗸𝗻𝗼𝘄𝗻",  
         command.config.commandCategory || "𝗨𝗻𝗸𝗻𝗼𝘄𝗻",  
         command.config.cooldowns || 0
     );  
 
-    downloadMedia(files => {  
-        const attachments = files.map(f => fs.createReadStream(f));  
-        api.sendMessage({ body: detail, attachment: attachments }, threadID, () => {  
-            files.forEach(f => fs.unlinkSync(f));  
-        }, messageID);  
-    });
+    await handleMediaSending({ api, event, bodyText: detail });
 };
 
-module.exports.run = function ({ api, event, args, getText }) {
+module.exports.run = async function ({ api, event, args, getText }) {
     const { commands } = global.client;
     const { threadID, messageID } = event;
 
@@ -87,26 +110,17 @@ module.exports.run = function ({ api, event, args, getText }) {
     if (args[0] && commands.has(args[0].toLowerCase())) {  
         const command = commands.get(args[0].toLowerCase());  
 
-        let perm = "𝗨𝘀𝗲𝗿";
-        if (command.config.hasPermssion == 1) perm = "𝗔𝗱𝗺𝗶𝗻 𝗚𝗿𝗼𝘂𝗽";
-        if (command.config.hasPermssion == 2) perm = "𝗔𝗱𝗺𝗶𝗻 𝗕𝗼𝘁";
-
         const detailText = getText("moduleInfo",  
             command.config.name,  
             command.config.usages || "𝗡𝗼𝘁 𝗣𝗿𝗼𝘃𝗶𝗱𝗲𝗱",  
             command.config.description || "𝗡𝗼𝘁 𝗣𝗿𝗼𝘃𝗶𝗱𝗲𝗱",  
-            perm,  
+            command.config.hasPermssion,  
             command.config.credits || "𝗨𝗻𝗸𝗻𝗼𝘄𝗻",  
             command.config.commandCategory || "𝗨𝗻𝗸𝗻𝗼𝘄𝗻",  
             command.config.cooldowns || 0
         );  
 
-        downloadMedia(files => {  
-            const attachments = files.map(f => fs.createReadStream(f));  
-            api.sendMessage({ body: detailText, attachment: attachments }, threadID, () => {  
-                files.forEach(f => fs.unlinkSync(f));  
-            }, messageID);  
-        });  
+        await handleMediaSending({ api, event, bodyText: detailText });  
         return;  
     }  
 
@@ -122,12 +136,7 @@ module.exports.run = function ({ api, event, args, getText }) {
 
     let msg = helpView.map(cmdName => `» ✪ ${cmdName}`).join("\n");
 
-    const text = `───────────────\n\n» 📜 𝗖𝗢𝗠𝗠𝗔𝗡𝗗 𝗟𝗜𝗦𝗧\n\n» 📄 𝗣𝗮𝗴𝗲: ${page}/${totalPages}\n» 🧮 𝗧𝗼𝘁𝗮𝗹: ${arrayInfo.length}\n\n───────────────\n\n${msg}\n\n───────────────\n\n» ⚙️ 𝗣𝗿𝗲𝗳𝗶𝘅: ${prefix}\n» 🤖 𝗕𝗼𝘁 𝗡𝗮𝗺𝗲: ${global.config.BOTNAME || "𝗕𝗼𝘁"}\n\n───────────────\n\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`;
+    const text = `───────────────\n\n» 📜 𝗖𝗢𝗠𝗠𝗔𝗡𝗗 𝗟𝗜𝗦𝗧 📜\n\n» 📄 𝗣𝗮𝗴𝗲: ${page}/${totalPages}\n» 🧮 𝗧𝗼𝘁𝗮𝗹: ${arrayInfo.length}\n\n───────────────\n\n${msg}\n\n»👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍\n\n───────────────`;
 
-    downloadMedia(files => {  
-        const attachments = files.map(f => fs.createReadStream(f));  
-        api.sendMessage({ body: text, attachment: attachments }, threadID, () => {  
-            files.forEach(f => fs.unlinkSync(f));  
-        }, messageID);  
-    });  
+    await handleMediaSending({ api, event, bodyText: text });  
 };
