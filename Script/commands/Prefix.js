@@ -1,9 +1,12 @@
+const axios = require("axios");
+const fs = require("fs-extra");
+
 module.exports.config = {
   name: "prefix",
   version: "1.0.0", 
   hasPermssion: 0,
-  credits: "Shahadat SAHU",
-  description: "Display the bot's prefix and owner info",
+  credits: "𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
+  description: "Display the bot's prefix and owner info with a random image",
   commandCategory: "Information",
   usages: "",
   cooldowns: 5
@@ -29,38 +32,57 @@ module.exports.handleEvent = async ({ event, api, Threads }) => {
 
   let lowerBody = body.toLowerCase();
   if (triggerWords.includes(lowerBody)) {
-    return api.sendMessage(
-`🌟━━━━━━━━━━━━━━━━━🌟
-　　　『 𝐏𝐑𝐄𝐅𝐈𝐗 𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍 』
-🌟━━━━━━━━━━━━━━━━━🌟
-『 𝐁𝐎𝐓 𝐈𝐍𝐅𝐎 』
+    
+    // আপনার দেওয়া ইমেজ লিংকের র্যান্ডম লিস্ট
+    const images = [
+      "https://i.imgur.com/j2LwYFl.jpeg",
+      "https://i.imgur.com/8pZQNWY.jpeg"
+    ];
+    const randomImage = images[Math.floor(Math.random() * images.length)];
+    const pathImg = __dirname + `/cache/prefix_${threadID}.jpeg`;
 
-➤ 𝗕𝗼𝘁 𝗽𝗿𝗲𝗳𝗶𝘅 : [ ${prefix} ]
-➤ 𝗕𝗼𝘁 𝗡𝗮𝗺𝗲   : ─꯭─⃝‌‌𝐒𝐡𝐚𝐡𝐚𝐝𝐚𝐭 𝐂𝐡𝐚𝐭 𝐁𝐨𝐓
-➤ 𝗕𝗼𝘁 𝗔𝗱𝗺𝗶𝗻 : 𝐒𝐇𝐀𝐇𝐀𝐃𝐀𝐓
+    try {
+      const response = await axios.get(randomImage, { responseType: "arraybuffer" });
+      fs.writeFileSync(pathImg, Buffer.from(response.data, "utf-8"));
 
-『 𝐁𝐎𝐗 𝐈𝐍𝐅𝐎 』
+      return api.sendMessage({
+        body: `───────────────\n\n» 👑 𝗣𝗥𝗘𝗙𝗜𝗫 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\n\n   » 𝗕𝗼𝘁 𝗽𝗿𝗲𝗳𝗶𝘅 : [ ${prefix} ]\n   » 𝗕𝗼𝘁 𝗡𝗮𝗺𝗲 :─꯭─⃝‌‌𝗦𝗶𝘆𝗮𝗺 𝗖𝗵𝗮𝘁 𝗕𝗼𝘁\n   » 𝗕𝗼𝘁 𝗔𝗱𝗺𝗶𝗻 : 𝗦𝗜𝗬𝗔𝗠-𝗛𝗔𝗦𝗔𝗡\n\n» 📦 𝗕𝗢𝗫 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\n\n   » 𝗕𝗼𝘅 𝗣𝗿𝗲𝗳𝗶𝘅 : ${prefix}\n   » 𝗕𝗼𝘅 𝗡𝗮𝗺𝗲 : ${groupName}\n   » 𝗕𝗼𝘅 𝗧𝗜𝗗 : ${threadID}\n\n───────────────\n\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`,
+        attachment: fs.createReadStream(pathImg)
+      }, threadID, () => fs.unlinkSync(pathImg), messageID);
 
-➤ 𝗕𝗼𝘅 𝗣𝗿𝗲𝗳𝗶𝘅 : ${prefix}
-➤ 𝗕𝗼𝘅 𝗡𝗮𝗺𝗲   : ${groupName}
-➤ 𝗕𝗼𝘅 𝗧𝗜𝗗     : ${threadID}
+    } catch (error) {
+      // ইমেজ ডাউনলোড ফেইল হলে শুধু টেক্সট মেসেজ যাবে যেন বট ক্র্যাশ না করে
+      return api.sendMessage(
+`───────────────
 
-『 𝐎𝐖𝐍𝐄𝐑 𝐈𝐍𝐅𝐎 』
+» 🧚 𝗣𝗥𝗘𝗙𝗜𝗫 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡
 
-➤ 𝗢𝘄𝗻𝗲𝗿 𝗡𝗮𝗺𝗲 : 𝐒𝐇𝐀𝐇𝐀𝐃𝐀𝐓 𝐒𝐀𝐇𝐔
-➤ 𝗙𝗮𝗰𝗲𝗯𝗼𝗼𝗸    : www.facebook.com/100044713412032
-➤ 𝗠𝗲𝘀𝘀𝗲𝗻𝗴𝗲𝗿  : m.me/100044713412032
-➤ 𝗪𝗵𝗮𝘁𝘀𝗔𝗽𝗽    : https://wa.me/+8801882333052
+   » 𝗕𝗼𝘁 𝗽𝗿𝗲𝗳𝗶𝘅 : [ ${prefix} ]
+   » 𝗕𝗼𝘁 : ─꯭─⃝‌‌𝗦𝗶𝘆𝗮𝗺 𝗖𝗵𝗮𝘁 𝗕𝗼𝘁
+   » 𝗕𝗼𝘁 𝗔𝗱𝗺𝗶𝗻 : 𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍
 
-🌟━━━━━━━━━━━━━━━━━🌟
-　　　　𝗧𝗵𝗮𝗻𝗸 𝗬𝗼𝘂 𝗙𝗼𝗿 𝗨𝘀𝗶𝗻𝗴!
-🌟━━━━━━━━━━━━━━━━━🌟`,
-      threadID,
-      null
-    );
+» 📦 𝗕𝗢𝗫 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡
+
+   » 𝗕𝗼𝘅 𝗣𝗿𝗲𝗳𝗶𝘅 : ${prefix}
+   » 𝗕𝗼𝘅 𝗡𝗮𝗺𝗲 : ${groupName}
+   » 𝗕𝗼𝘅 𝗧𝗜𝗗 : ${threadID}
+
+───────────────
+» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, threadID, messageID);
+    }
   }
 };
 
 module.exports.run = async ({ event, api }) => {
-  return api.sendMessage("Type 'prefix' or similar to get the bot info.", event.threadID);
+  return api.sendMessage(
+`───────────────
+
+» ℹ️ 𝗧𝘆𝗽𝗲 '𝗽𝗿𝗲𝗳𝗶𝘅' 𝗼𝗿 𝘀𝗶𝗺𝗶𝗹𝗮𝗿 𝘁𝗼 𝗴𝗲𝘁 𝘁𝗵𝗲 𝗯𝗼𝘁 𝗶𝗻𝗳𝗼.
+
+───────────────
+
+» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, 
+    event.threadID, 
+    event.messageID
+  );
 };
