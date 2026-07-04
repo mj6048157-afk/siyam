@@ -6,7 +6,7 @@ module.exports.config = {
   name: "hug",
   version: "2.0.0",
   hasPermssion: 0,
-  credits: "SHAHADAT SAHU",
+  credits: "𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
   description: "Generate hug frame using Avatar Canvas API",
   commandCategory: "banner",
   usePrefix: true,
@@ -26,7 +26,11 @@ module.exports.run = async function ({ event, api }) {
   }
 
   if (!targetID) {
-    return api.sendMessage("Please reply or mention someone......", threadID, messageID);
+    return api.sendMessage(
+      `───────────────\n\n» ❌ 𝗣𝗹𝗲𝗮𝘀𝗲 𝗿𝗲𝗽𝗹𝘆 𝗼𝗿 𝗺𝗲𝗻𝘁𝗶𝗼𝗻 𝘀𝗼𝗺𝗲𝗼𝗻𝗲...\n\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, 
+      threadID, 
+      messageID
+    );
   }
 
   try {
@@ -42,7 +46,10 @@ module.exports.run = async function ({ event, api }) {
       { responseType: "arraybuffer", timeout: 30000 }
     );
 
-    const imgPath = path.join(__dirname, "cache", `hug_${senderID}_${targetID}.png`);
+    const cacheDir = path.join(__dirname, "cache");
+    if (!fs.existsSync(cacheDir)) fs.mkdirSync(cacheDir);
+
+    const imgPath = path.join(cacheDir, `hug_${senderID}_${targetID}.png`);
     fs.writeFileSync(imgPath, res.data);
 
     const captions = [
@@ -54,19 +61,26 @@ module.exports.run = async function ({ event, api }) {
       "❝ তোমাকে ভালোবাসা আমার জীবনের সবচেয়ে সুন্দর অনুভূতি!❤️‍🔥",
       "❝ তুমি আমার জীবনের সেই গল্প, যা প্রতিবার পড়লে নতুন প্রেম জাগে!💚",
       "❝ তোমাকে অনেক অনেক ভালোবাসি আমার রাজকন্যা।❤️‍🩹",
-      "❝ You complete me. A warm hug just for you!🌺"
+      "❝ 𝗬𝗼𝘂 𝗰𝗼𝗺𝗽𝗹𝗲𝘁𝗲 𝗺𝗲. 𝗔 𝘄𝗮𝗿𝗺 𝗵𝘂𝗴 𝗷𝘂𝘀𝘁 𝗳𝗼𝗿 𝘆𝗼𝘂!🌺"
     ];
 
     const caption = captions[Math.floor(Math.random() * captions.length)];
 
     return api.sendMessage(
-      { body: caption, attachment: fs.createReadStream(imgPath) },
+      { 
+        body: `───────────────\n\n» 🤗 ${caption}\n\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, 
+        attachment: fs.createReadStream(imgPath) 
+      },
       threadID,
       () => fs.unlinkSync(imgPath),
       messageID
     );
 
-  } catch {
-    return api.sendMessage("API Error Call Boss SAHU", threadID, messageID);
+  } catch (err) {
+    return api.sendMessage(
+      `───────────────\n\n» ❌ 𝗔𝗣𝗜 𝗘𝗿𝗿𝗼𝗿 𝗖𝗮𝗹𝗹 𝗦𝗶𝘆𝗮𝗺. ${err.message || ""}\n\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, 
+      threadID, 
+      messageID
+    );
   }
 };
