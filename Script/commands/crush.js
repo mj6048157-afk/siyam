@@ -6,7 +6,7 @@ module.exports.config = {
   name: "crush",
   version: "1.0.0",
   hasPermssion: 0,
-  credits: "SHAHADAT SAHU", //don't change Credit😃
+  credits: "𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
   description: "Generate a couple banner image using sender and target Facebook UID via Avatar Canvas API",
   commandCategory: "banner",
   usePrefix: true,
@@ -45,7 +45,7 @@ module.exports.run = async function ({ event, api }) {
 
   if (!targetID) {
     return api.sendMessage(
-      "Please reply or mention someone......",
+      "───────────────\n\n» ⚠️ 𝗣𝗹𝗲𝗮𝘀𝗲 𝗿𝗲𝗽𝗹𝘆 𝗼𝗿 𝗺𝗲𝗻𝘁𝗶𝗼𝗻 𝘀𝗼𝗺𝗲𝗼𝗻𝗲.\n\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
       threadID,
       messageID
     );
@@ -68,30 +68,31 @@ module.exports.run = async function ({ event, api }) {
       { responseType: "arraybuffer", timeout: 30000 }
     );
 
-    const imgPath = path.join(
-      __dirname,
-      "cache",
-      `crush_${senderID}_${targetID}.png`
-    );
+    const cacheDir = path.join(__dirname, "cache");
+    fs.ensureDirSync(cacheDir);
 
+    const imgPath = path.join(cacheDir, `crush_${senderID}_${targetID}.png`);
     fs.writeFileSync(imgPath, res.data);
 
-    const caption =
-      crushCaptions[Math.floor(Math.random() * crushCaptions.length)];
+    const caption = crushCaptions[Math.floor(Math.random() * crushCaptions.length)];
+    
+    const msg = `───────────────\n\n» 😍 𝗖𝗿𝘂𝘀𝗵 | ${caption}\n\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`;
 
     return api.sendMessage(
       {
-        body: `✧•❁𝐂𝐫𝐮𝐬𝐡❁•✧\n\n${caption}`,
+        body: msg,
         attachment: fs.createReadStream(imgPath)
       },
       threadID,
-      () => fs.unlinkSync(imgPath),
+      () => {
+        if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
+      },
       messageID
     );
 
   } catch (e) {
     return api.sendMessage(
-      "API Error Call Boss SAHU",
+      "───────────────\n\n» ❌ 𝗔𝗣𝗶 𝗘𝗿𝗿𝗼𝗿 𝗖𝗮𝗹𝗹 𝗔𝗱𝗺𝗶𝗻 𝗦𝗶𝘆𝗮𝗺.\n\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
       threadID,
       messageID
     );
