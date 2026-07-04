@@ -2,7 +2,7 @@ module.exports.config = {
   name: "bro",
   version: "1.0.0",
   hasPermssion: 0,
-  credits: "SHAHADAT SAHU",
+  credits: "𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
   description: "Generate a couple banner image using sender and target Facebook UID via Avatar Canvas API",
   commandCategory: "banner",
   usePrefix: true,
@@ -21,7 +21,6 @@ module.exports.run = async function ({ event, api }) {
   const path = require("path");
 
   const { threadID, messageID, senderID, mentions, messageReply } = event;
-
   let targetID = null;
 
   if (mentions && Object.keys(mentions).length > 0) {
@@ -32,10 +31,10 @@ module.exports.run = async function ({ event, api }) {
 
   if (!targetID) {
     return api.sendMessage(
-      "Please reply or mention someone......",
-      threadID,
-      messageID
-    );
+`───────────────
+» ⚠️ 𝗣𝗹𝗲𝗮𝘀𝗲 𝗿𝗲𝗽𝗹𝘆 𝗼𝗿 𝗺𝗲𝗻𝘁𝗶𝗼𝗻 𝘀𝗼𝗺𝗲𝗼𝗻𝗲!
+───────────────
+» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, threadID, messageID);
   }
 
   try {
@@ -55,34 +54,37 @@ module.exports.run = async function ({ event, api }) {
       { responseType: "arraybuffer", timeout: 30000 }
     );
 
-    const imgPath = path.join(
-      __dirname,
-      "cache",
-      `bro_${senderID}_${targetID}.png`
-    );
+    const cacheDir = path.join(__dirname, "cache");
+    fs.ensureDirSync(cacheDir);
 
+    const imgPath = path.join(cacheDir, `bro_${senderID}_${targetID}.png`);
     fs.writeFileSync(imgPath, res.data);
 
     return api.sendMessage(
       {
-        body: `🌸 𝐓𝐞𝐫𝐚 𝐁𝐚𝐢 🌸
-        
-🤝 ভাই–ব্রাদারের বন্ধন চিরকাল অটুট থাকুক 💖
-🫱এই নে, রাখ তোর ভাইরে ❤️  
+        body: 
+`───────────────
+» 🤝 ভাই–ব্রাদারের বন্ধন চিরকাল অটুট থাকুক 💖
+» 🫱 এই নে, রাখ তোর ভাইরে ❤️ 
 
-👑 𝐁𝐑𝐎𝐓𝐇𝐄𝐑 𝐅𝐎𝐑𝐄𝐕𝐄𝐑 🩷🌸`,
+» 👑 𝗕𝗥𝗢𝗧𝗛block𝗘𝗥 𝗙𝗢𝗥𝗘𝗩𝗘𝗥
+
+───────────────
+» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`,
         attachment: fs.createReadStream(imgPath)
       },
       threadID,
-      () => fs.unlinkSync(imgPath),
+      () => {
+        if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
+      },
       messageID
     );
 
   } catch (e) {
     return api.sendMessage(
-      "API Error Call Boss SAHU",
-      threadID,
-      messageID
-    );
+`───────────────
+» ❌ 𝗔block𝗣block 𝗘𝗿𝗿𝗼𝗿! 𝗣𝗹𝗲𝗮𝘀𝗲 𝘁𝗿𝘆 𝗮𝗴𝗮Block𝗻 𝗹𝗮𝘁𝗲𝗿.
+───────────────
+» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, threadID, messageID);
   }
 };
