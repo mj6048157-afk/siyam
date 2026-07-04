@@ -5,7 +5,7 @@ module.exports.config = {
   name: "resend",
   version: "1.1.0",
   hasPermssion: 0,
-  credits: "SHAHADAT SAHU",
+  credits: "𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
   description: "Auto resend removed messages",
   commandCategory: "general",
   cooldowns: 0,
@@ -19,6 +19,7 @@ module.exports.handleEvent = async function ({ event, api, Users }) {
   if (!global.data.botID) global.data.botID = api.getCurrentUserID();
 
   const data = global.data.threadData.get(threadID) || {};
+  const prefix = global.config.PREFIX;
 
   if ((data.resend === undefined || data.resend !== false) && senderID !== global.data.botID) {
 
@@ -33,7 +34,7 @@ module.exports.handleEvent = async function ({ event, api, Users }) {
 
       if (!msg.attachment || msg.attachment.length === 0) {
         return api.sendMessage(
-          `সবাই দেখেন নাও\n${userName} রিমুভ করেছে:\n${msg.msgBody || ""}`,
+          `───────────────\n\n» ⚠️ সবাই দেখে নাও\n${userName} রিমুভ করেছে:\n${msg.msgBody || ""}\n\n🛑 এটি বন্ধ করতে লিখুন: ${prefix}resend off\n\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`,
           threadID
         );
       }
@@ -52,7 +53,7 @@ module.exports.handleEvent = async function ({ event, api, Users }) {
 
       return api.sendMessage(
         {
-          body: `সবাই দেখেন নাও\n${userName} রিমুভ করেছে:\n${msg.msgBody || ""}`,
+          body: `───────────────\n\n» ⚠️ সবাই দেখে নাও\n${userName} রিমুভ করেছে:\n${msg.msgBody || ""}\n\n🛑 এটি বন্ধ করতে লিখুন: ${prefix}resend off\n\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`,
           attachment: attachmentsList
         },
         threadID
@@ -69,7 +70,7 @@ module.exports.run = async function ({ api, event, Threads }) {
   global.data.threadData.set(threadID, data);
 
   return api.sendMessage(
-    `Resend mode: ${data.resend ? "ON" : "OFF"}`,
+    `───────────────\n\n» 🔄 𝗥𝗲𝘀𝗲𝗻𝗱 𝗠𝗼𝗱𝗲: ${data.resend ? "𝗢𝗡" : "𝗢𝗙𝗙"}\n\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`,
     threadID,
     messageID
   );
