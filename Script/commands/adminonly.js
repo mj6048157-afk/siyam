@@ -5,7 +5,7 @@ module.exports.config = {
   name: "onlyadmin",
   version: "2.0",
   hasPermssion: 2,
-  credits: "SHADAHAT SAHU",
+  credits: "𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
   description: "Admin only mode toggle",
   commandCategory: "Admin",
   usages: "onlyadmin",
@@ -32,14 +32,11 @@ module.exports.run = async ({ api, event }) => {
   if (!data.adminbox) data.adminbox = {};
 
   data.adminbox[id] = !data.adminbox[id];
-
   fs.writeFileSync(file, JSON.stringify(data));
 
-  api.sendMessage(
-    data.adminbox[id]
-      ? "» Admin Only Enabled\nOnly admins can use commands now."
-      : "» Admin Only Disabled\nEveryone can use the bot now.",
-    id,
-    event.messageID
-  );
+  const msg = data.adminbox[id]
+    ? "───────────────\n» 👑 𝗔𝗱𝗺𝗶𝗻 𝗢𝗻𝗹𝘆 𝗠𝗼𝗱𝗲: 𝗘𝗻𝗮𝗯𝗹𝗲𝗱 🔒\n» 🧚এখন শুধু আমার বস 👑-𝐒𝐈𝐘𝐀𝐌-👑 বট ব্যবহার করতে পারবে✅।\n───────────────\n»👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍"
+    : "───────────────\n» 🌐 𝗔𝗱𝗺𝗶𝗻 𝗢𝗻𝗹𝘆 𝗠𝗼𝗱𝗲: 𝗗𝗶𝘀𝗮𝗯𝗹𝗲𝗱 🔓\n» 🫶এখন সবাই বট ব্যবহার করতে পারবে।✅\n───────────────\n»👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍";
+
+  api.sendMessage(msg, id, event.messageID);
 };
