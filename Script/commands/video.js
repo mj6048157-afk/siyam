@@ -1,174 +1,153 @@
 const axios = require("axios");
-const fs = require('fs');
+const fs = require("fs-extra");
+const path = require("path");
 
-const baseApiUrl = async () => {
-  const base = await axios.get("https://raw.githubusercontent.com/Mostakim0978/D1PT0/refs/heads/main/baseApiUrl.json");
-  return base.data.api;
+module.exports.config = {
+  name: "video",
+  version: "2.2.3",
+  hasPermssion: 0,
+  credits: "𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
+  description: "Search & download YouTube videos with or without prefix",
+  commandCategory: "media",
+  usages: "video <video name>",
+  cooldowns: 5
 };
 
-module.exports = {
-  config: {
-    name: "video",
-    version: "1.1.4",
-    credits: "dipto", //fixed by Ullash 
-    countDown: 5,
-    hasPermssion: 0,
-    description: "Download video, audio, and info from YouTube",
-    category: "media",
-    commandCategory: "media",
-    usePrefix: true,
-    prefix: true,
-    usages:
-      " {pn} [video|-v] [<video name>|<video link>]\n" +
-      " {pn} [audio|-a] [<video name>|<video link>]\n" +
-      " {pn} [info|-i] [<video name>|<video link>]\n" +
-      "Example:\n" +
-      "{pn} -v chipi chipi chapa chapa\n" +
-      "{pn} -a chipi chipi chapa chapa\n" +
-      "{pn} -i chipi chipi chapa chapa"
-  },
+// 🎯 MULTI API SEARCH FUNCTION
+async function searchVideo(query) {
+  const apis = [
+    `https://betadash-search-download.vercel.app/yt?search=${encodeURIComponent(query)}`,
+    `https://yt-api-imran.vercel.app/api/search?query=${encodeURIComponent(query)}`,
+    `https://www.googleapis.com/youtube/v3/search?q=${encodeURIComponent(query)}`
+  ];
 
-  run: async ({ api, args, event }) => {
-    const { threadID, messageID, senderID } = event;
-
-    let action = args[0] ? args[0].toLowerCase() : '-v';
-
-    if (!['-v', 'video', 'mp4', '-a', 'audio', 'mp3', '-i', 'info'].includes(action)) {
-      args.unshift('-v');
-      action = '-v';
-    }
-
-    const checkurl = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))((\w|-){11})(?:\S+)?$/;
-    const urlYtb = args[1] ? checkurl.test(args[1]) : false;
-
-    if (urlYtb) {
-      const format = ['-v', 'video', 'mp4'].includes(action) ? 'mp4'
-        : ['-a', 'audio', 'mp3'].includes(action) ? 'mp3' : null;
-
-      if (!format) return api.sendMessage('❌ Invalid format. Use -v for video or -a for audio.', threadID, messageID);
-
-      try {
-        const match = args[1].match(checkurl);
-        const videoID = match ? match[1] : null;
-        if (!videoID) return api.sendMessage('❌ Invalid YouTube link.', threadID, messageID);
-
-        const path = `ytb_${format}_${videoID}.${format}`;
-        const { data: { title, downloadLink, quality } } = await axios.get(`${await baseApiUrl()}/ytDl3?link=${videoID}&format=${format}&quality=3`);
-
-        await api.sendMessage({
-          body: `• Title: ${title}\n• Quality: ${quality}`,
-          attachment: await downloadFile(downloadLink, path)
-        }, threadID, () => fs.unlinkSync(path), messageID);
-
-        return;
-      } catch (e) {
-        console.error(e);
-        return api.sendMessage('❌ Failed to download. Please try again later.', threadID, messageID);
-      }
-    }
-
-    args.shift(); 
-    const keyWord = args.join(" ");
-    if (!keyWord) return api.sendMessage('❌ Please provide a search keyword.', threadID, messageID);
-
+  for (let url of apis) {
     try {
-      const searchResult = (await axios.get(`${await baseApiUrl()}/ytFullSearch?songName=${encodeURIComponent(keyWord)}`)).data.slice(0, 6);
-      if (!searchResult.length) return api.sendMessage(`⭕ No results for keyword: ${keyWord}`, threadID, messageID);
+      const res = await axios.get(url);
+      let video = null;
 
-      let msg = "";
-      const thumbnails = [];
-      let i = 1;
-
-      for (const info of searchResult) {
-        thumbnails.push(streamImage(info.thumbnail, `thumbnail_${i}.jpg`));
-        msg += `${i++}. ${info.title}\nTime: ${info.time}\nChannel: ${info.channel.name}\n\n`;
+      // API-1 format
+      if (res.data?.[0]) video = res.data[0];
+      // API-2 format
+      else if (res.data?.results?.[0]) video = res.data.results[0];
+      // API-3 fallback format
+      else if (res.data?.items?.[0]) {
+        const item = res.data.items[0];
+        video = {
+          title: item.snippet?.title,
+          url: `https://www.youtube.com/watch?v=${item.id?.videoId}`
+        };
       }
 
-      api.sendMessage({
-        body: msg + "👉 Reply to this message with a number to select.",
-        attachment: await Promise.all(thumbnails)
-      }, threadID, (err, info) => {
-        if (err) return console.error(err);
-        global.client.handleReply.push({
-          name: module.exports.config.name,
-          messageID: info.messageID,
-          author: senderID,
-          result: searchResult,
-          action
-        });
-      }, messageID);
-    } catch (err) {
-      console.error(err);
-      return api.sendMessage("❌ An error occurred while searching: " + err.message, threadID, messageID);
-    }
-  },
-
-  handleReply: async ({ event, api, handleReply }) => {
-    const { threadID, messageID, senderID, body } = event;
-
-    if (senderID !== handleReply.author) return;
-    const { result, action } = handleReply;
-    const choice = parseInt(body);
-
-    if (isNaN(choice) || choice <= 0 || choice > result.length)
-      return api.sendMessage("❌ Invalid number. Please reply with a valid number.", threadID, messageID);
-
-    const selectedVideo = result[choice - 1];
-    const videoID = selectedVideo.id;
-
-    try {
-      await api.unsendMessage(handleReply.messageID);
+      if (video?.url) return video;
     } catch (e) {
-      console.error("Unsend failed:", e);
+      continue;
     }
+  }
+  return null;
+}
 
-    if (['-v', 'video', 'mp4', '-a', 'audio', 'mp3', 'music'].includes(action)) {
-      const format = ['-v', 'video', 'mp4'].includes(action) ? 'mp4' : 'mp3';
-      try {
-        const path = `ytb_${format}_${videoID}.${format}`;
-        const { data: { title, downloadLink, quality } } = await axios.get(`${await baseApiUrl()}/ytDl3?link=${videoID}&format=${format}&quality=3`);
+// প্রিফিক্স ছাড়া (No Prefix) হ্যান্ডেলার
+module.exports.handleEvent = async function ({ api, event }) {
+  const { body, threadID, messageID, senderID } = event;
+  if (!body) return;
 
-        await api.sendMessage({
-          body: `• Title: ${title}\n• Quality: ${quality}`,
-          attachment: await downloadFile(downloadLink, path)
-        }, threadID, () => fs.unlinkSync(path), messageID);
-      } catch (e) {
-        console.error(e);
-        return api.sendMessage('❌ Failed to download. Please try again later.', threadID, messageID);
-      }
-    }
+  const botID = api.getCurrentUserID();
+  if (String(senderID) === String(botID)) return;
 
-    if (action === '-i' || action === 'info') {
-      try {
-        const { data } = await axios.get(`${await baseApiUrl()}/ytfullinfo?videoID=${videoID}`);
-        await api.sendMessage({
-          body: `✨ Title: ${data.title}\n⏳ Duration: ${(data.duration / 60).toFixed(2)} mins\n📺 Resolution: ${data.resolution}\n👀 Views: ${data.view_count}\n👍 Likes: ${data.like_count}\n💬 Comments: ${data.comment_count}\n📂 Category: ${data.categories[0]}\n📢 Channel: ${data.channel}\n🧍 Uploader ID: ${data.uploader_id}\n👥 Subscribers: ${data.channel_follower_count}\n🔗 Channel URL: ${data.channel_url}\n🔗 Video URL: ${data.webpage_url}`,
-          attachment: await streamImage(data.thumbnail, 'info_thumb.jpg')
-        }, threadID, messageID);
-      } catch (e) {
-        console.error(e);
-        return api.sendMessage('❌ Failed to retrieve video info.', threadID, messageID);
-      }
-    }
+  const msg = body.trim();
+  if (msg.toLowerCase().startsWith("video ")) {
+    const args = msg.split(" ");
+    args.shift(); // 'video' শব্দটা বাদ দেওয়া হলো
+    return module.exports.handleDownload({ api, event, args });
   }
 };
 
-async function downloadFile(url, pathName) {
-  try {
-    const res = await axios.get(url, { responseType: "arraybuffer" });
-    fs.writeFileSync(pathName, Buffer.from(res.data));
-    return fs.createReadStream(pathName);
-  } catch (err) {
-    throw err;
-  }
-}
+// প্রিফিক্স সহ হ্যান্ডেলার
+module.exports.run = async function ({ api, event, args }) {
+  return module.exports.handleDownload({ api, event, args });
+};
 
-async function streamImage(url, pathName) {
-  try {
-    const response = await axios.get(url, { responseType: "stream" });
-    response.data.path = pathName;
-    return response.data;
-  } catch (err) {
-    throw err;
+// মেইন ডাউনলোডার কোর ইঞ্জিন
+module.exports.handleDownload = async function ({ api, event, args }) {
+  const { threadID, messageID } = event;
+  const creatorName = "Farhan Khan";
+  let query = args.join(" ").trim();
+
+  if (!query || query.toLowerCase() === "video") {
+    return api.sendMessage(
+`───────────────
+» 👑 ❌ 𝗣𝗹𝗲𝗮𝘀𝗲 𝗽𝗿𝗼𝘃𝗶𝗱𝗲 𝗮 𝘀𝗼𝗻𝗴 𝗻𝗮𝗺𝗲.
+» 📌 𝗘𝘅𝗮𝗺𝗽𝗹𝗲: 𝘃𝗶𝗱𝗲𝗼 𝗟𝗲𝘁 𝗠𝗲 𝗟𝗼𝘃𝗲 𝗬𝗼𝘂
+───────────────
+» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, threadID, messageID);
   }
-}
+
+  let tempMsgID = null;
+
+  try {
+    const searching = await api.sendMessage(
+`───────────────
+» 👑 🔍 𝗦𝗘𝗔𝗥𝗖𝗛𝗜𝗡𝗚 𝗦𝗬𝗦𝗧𝗘𝗠...
+» 📌 𝗤𝘂𝗲𝗿𝘆: ${query}
+» ⏳ 𝗣𝗹𝗲𝗮𝘀𝗲 𝘄𝗮𝗶𝘁...
+───────────────
+» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, threadID);
+    tempMsgID = searching.messageID;
+
+    const video = await searchVideo(query);
+    if (!video || !video.url) throw new Error("No results found from all APIs.");
+
+    await api.unsendMessage(tempMsgID).catch(() => {});
+
+    const downloading = await api.sendMessage(
+`───────────────
+» 👑 🎬 𝗩𝗜𝗗𝗘𝗢 𝗙𝗢𝗨𝗡𝗗!
+» 📖 𝗧𝗶𝘁𝗹𝗲: ${video.title}
+» ⬇️ 𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗶𝗻𝗴...
+───────────────
+» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, threadID);
+    tempMsgID = downloading.messageID;
+
+    const dlRes = await axios.get(`https://yt-api-imran.vercel.app/api?url=${video.url}`);
+    const downloadUrl = dlRes.data?.downloadUrl;
+    if (!downloadUrl) throw new Error("Download link not available.");
+
+    const buffer = (await axios.get(downloadUrl, { responseType: "arraybuffer" })).data;
+
+    const cacheDir = path.join(__dirname, "cache");
+    await fs.ensureDir(cacheDir);
+
+    const filePath = path.join(cacheDir, `video_${Date.now()}.mp4`);
+    await fs.writeFile(filePath, buffer);
+
+    const finalMessage = {
+      body: 
+`───────────────
+» 👑 🎬 𝗩𝗜𝗗𝗘𝗢 𝗥𝗘𝗔𝗗𝗬
+───────────────
+» 📖 𝗧𝗶𝘁𝗹𝗲: ${video.title}
+» ⏱ 𝗗𝘂𝗿𝗮𝘁𝗶𝗼𝗻: ${video.time || "N/A"}
+» 🖌️ 𝗣𝗼𝘄𝗲𝗿 𝗯𝘆: ${creatorName}
+───────────────
+» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`,
+      attachment: fs.createReadStream(filePath)
+    };
+
+    await api.sendMessage(finalMessage, threadID, async () => {
+      if (fs.existsSync(filePath)) await fs.unlink(filePath);
+    }, messageID);
+
+    if (tempMsgID) await api.unsendMessage(tempMsgID).catch(() => {});
+
+  } catch (err) {
+    if (tempMsgID) await api.unsendMessage(tempMsgID).catch(() => {});
+    return api.sendMessage(
+`───────────────
+» 👑 ❌ 𝗙𝗮𝗶𝗹𝗲𝗱
+» ━━━━━━━━━━━━━━━
+» ⚠️ ${err.message || "An unexpected error occurred."}
+───────────────
+» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, threadID, messageID);
+  }
+};
