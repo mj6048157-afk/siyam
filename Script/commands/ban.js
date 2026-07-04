@@ -2,76 +2,83 @@ module.exports.config = {
   name: "ban",
   version: "2.4.0",
   hasPermssion: 2,
-  credits: "SHAHADAT SAHU",
+  credits: "𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
   description: "Ban or unban a user directly, works on reply too",
   commandCategory: "group",
-  usages: `${global.config.PREFIX}ban <UID/@tag>\n${global.config.PREFIX}unban <UID/@tag>`,
+  usages: "[ban/unban] [UID/@tag/reply]",
   cooldowns: 5
 };
 
-module.exports.languages = {
-  "en": {
-    "banSuccess": "[ Ban User ] Banned user: %1",
-    "unbanSuccess": "[ Unban User ] Unbanned user: %1",
-    "errorReponse": "%1 Can't do what you request",
-    "IDNotFound": "%1 ID you import doesn't exist in database",
-    "notBanned": "[ Unban User ] User %1 is not banned.",
-  }
-}
-
-module.exports.run = async ({ event, api, args, Users, getText }) => {
+module.exports.run = async ({ event, api, args, Users }) => {
   const { threadID, messageID, messageReply } = event;
 
-  if (!args[0] && !messageReply) 
-    return api.sendMessage("Usage: ban <UID/@tag> or unban <UID/@tag>, or reply to a user's message", threadID, messageID);
+  // 𝗠𝗲𝘀𝘀𝗮𝗴𝗲 𝗙𝗼𝗿𝗺𝗮𝘁𝘁𝗶𝗻𝗴 𝗛𝗲𝗹𝗽𝗲𝗿
+  const formatMsg = (text) => {
+    return `───────────────\n\n» ${text}\n\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`;
+  };
 
-  const command = event.body.split(" ")[0].slice(global.config.PREFIX.length).toLowerCase(); // ban or unban
+  const command = event.body.split(" ")[0].slice(global.config.PREFIX.length).toLowerCase();
   let targetID;
+
   if (messageReply) {
     targetID = messageReply.senderID;
-  }
-  else if (Object.keys(event.mentions).length > 0) {
+  } else if (Object.keys(event.mentions).length > 0) {
     targetID = Object.keys(event.mentions)[0];
-  } 
-  else {
+  } else {
     targetID = args[0];
   }
 
-  if (!targetID) return api.sendMessage("Please mention, reply, or give UID!", threadID, messageID);
-  if (isNaN(targetID)) return api.sendMessage("Invalid UID!", threadID, messageID);
-  if (!global.data.allUserID.includes(targetID)) 
-    return api.sendMessage(getText("IDNotFound", "[ User System ]"), threadID, messageID);
+  if (!targetID) {
+    const usageMsg = `⚠️ 𝗨𝘀𝗮𝗴𝗲:\n» ${global.config.PREFIX}𝗯𝗮𝗻 <𝗨𝗜𝗗/@𝘁𝗮𝗴/𝗿𝗲𝗽𝗹𝘆>\n» ${global.config.PREFIX}𝘂𝗻𝗯𝗮𝗻 <𝗨𝗜𝗗/@𝘁𝗮𝗴/𝗿𝗲𝗽𝗹𝘆>`;
+    return api.sendMessage(formatMsg(usageMsg), threadID, messageID);
+  }
+
+  if (isNaN(targetID)) {
+    return api.sendMessage(formatMsg("❌ 𝗜𝗻𝘃𝗮𝗹𝗶𝗱 𝗨𝗜𝗗!"), threadID, messageID);
+  }
+
+  if (!global.data.allUserID.includes(targetID)) {
+    return api.sendMessage(formatMsg("🔍 𝗨𝘀𝗲𝗿 𝗜𝗗 𝘆𝗼𝘂 𝗶𝗺𝗽𝗼𝗿𝘁 𝗱𝗼𝗲𝘀𝗻'𝘁 𝗲𝘅𝗶𝘀𝘁 𝗶𝗻 𝗱𝗮𝘁𝗮𝗯𝗮𝘀𝗲"), threadID, messageID);
+  }
 
   const nameTarget = global.data.userName.get(targetID) || await Users.getNameUser(targetID);
 
+  // 𝗕𝗮𝗻 𝗟𝗼𝗴𝗶𝗰
   if (command === "ban") {
     try {
       let data = (await Users.getData(targetID)).data || {};
       data.banned = true;
       await Users.setData(targetID, { data });
       global.data.userBanned.set(targetID, { reason: null, dateAdded: new Date().toLocaleString("en-GB", { timeZone: "Asia/Dhaka" }) });
-      return api.sendMessage(getText("banSuccess", `${targetID} - ${nameTarget}`), threadID, messageID);
+      
+      const successBan = `🚫 [ 𝗕𝗮𝗻 𝗨𝘀𝗲𝗿 ] 𝗕𝗮𝗻𝗻𝗲𝗱 𝘂𝘀𝗲𝗿: ${targetID} - ${nameTarget}`;
+      return api.sendMessage(formatMsg(successBan), threadID, messageID);
     } catch {
-      return api.sendMessage(getText("errorReponse", "[ Ban User ]"), threadID);
+      return api.sendMessage(formatMsg("❌ [ 𝗕𝗮𝗻 𝗨𝘀𝗲𝗿 ] 𝗖𝗮𝗻'𝘁 𝗱𝗼 𝘄𝗵𝗮𝘁 𝘆𝗼𝘂 𝗿𝗲𝗾𝘂𝗲𝘀𝘁"), threadID, messageID);
     }
   }
 
-  else if (command === "unban") {
+  // 𝗨𝗻𝗯𝗮𝗻 𝗟𝗼𝗴𝗶𝗰
+  if (command === "unban") {
     try {
       let data = (await Users.getData(targetID)).data || {};
-      if (!data.banned) return api.sendMessage(getText("notBanned", `${targetID} - ${nameTarget}`), threadID);
+      if (!data.banned) {
+        const notBannedMsg = `ℹ️ [ 𝗨𝗻𝗯𝗮𝗻 𝗨𝘀𝗲𝗿 ] 𝗨𝘀𝗲𝗿 ${targetID} - ${nameTarget} 𝗶𝘀 𝗻𝗼𝘁 𝗯𝗮𝗻𝗻𝗲𝗱.`;
+        return api.sendMessage(formatMsg(notBannedMsg), threadID, messageID);
+      }
 
       data.banned = false;
       await Users.setData(targetID, { data });
       global.data.userBanned.delete(targetID);
 
-      return api.sendMessage(getText("unbanSuccess", `${targetID} - ${nameTarget}`), threadID, messageID);
+      const successUnban = `✅ [ 𝗨𝗻𝗯𝗮𝗻 𝗨𝘀𝗲𝗿 ] 𝗨𝗻𝗯𝗮𝗻𝗻𝗲𝗱 𝘂𝘀𝗲𝗿: ${targetID} - ${nameTarget}`;
+      return api.sendMessage(formatMsg(successUnban), threadID, messageID);
     } catch {
-      return api.sendMessage(getText("errorReponse", "[ Unban User ]"), threadID);
+      return api.sendMessage(formatMsg("❌ [ 𝗨𝗻𝗯𝗮𝗻 𝗨𝘀𝗲𝗿 ] 𝗖𝗮𝗻'𝘁 𝗱𝗼 𝘄𝗵𝗮𝘁 𝘆𝗼𝘂 𝗿𝗲𝗾𝘂𝗲𝘀𝘁"), threadID, messageID);
     }
   }
 
-  else {
-    return api.sendMessage("Wrong input! Use ban/unban <UID/@tag> or reply to a user's message", threadID, messageID);
-  }
+  // 𝗜𝗻𝘃𝗮𝗹𝗶𝗱 𝗖𝗼𝗺𝗺𝗮𝗻𝗱 𝗙𝗮𝗹𝗹𝗯𝗮𝗰𝗸
+  const invalidCmd = `⚠️ 𝗪𝗿𝗼𝗻𝗴 𝗶𝗻𝗽𝘂𝘁!\n» 𝗨𝘀𝗲 ${global.config.PREFIX}𝗯𝗮𝗻 𝗼𝗿 ${global.config.PREFIX}𝘂𝗻𝗯𝗮𝗻`;
+  return api.sendMessage(formatMsg(invalidCmd), threadID, messageID);
 };
