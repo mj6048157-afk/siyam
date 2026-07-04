@@ -1,194 +1,126 @@
 module.exports.config = {
- name: 'allbox',
- version: '1.0.0',
- credits: '𝐂𝐘𝐁𝐄𝐑 ☢️_𖣘 -𝐁𝐎𝐓 ⚠️ 𝑻𝑬𝑨𝑴_ ☢️',
- hasPermssion: 2,
- description: '[Ban/Unban/Del/Remove] List[Data] thread The bot has joined in.',
- commandCategory: 'Admin',
- usages: '[page number/all]',
- cooldowns: 5
+  name: 'allbox',
+  version: '1.0.0',
+  credits: '𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍',
+  hasPermssion: 2,
+  description: '[Ban/Unban/Del/Remove] List[Data] thread The bot has joined in.',
+  commandCategory: 'Admin',
+  usages: '[page number/all]',
+  cooldowns: 5
 };
 
 module.exports.handleReply = async function ({ api, event, args, Threads, handleReply }) {
- const { threadID, messageID } = event;
- if (parseInt(event.senderID) !== parseInt(handleReply.author)) return;
- const moment = require("moment-timezone");
- const time = moment.tz("Asia/Dhaka").format("HH:MM:ss L");
- var arg = event.body.split(" ");
- var idgr = handleReply.groupid[arg[1] - 1];
- var groupName = handleReply.groupName[arg[1] - 1];
- switch (handleReply.type) {
- case "reply":
- {
- if (arg[0] == "ban" || arg[0] == "Ban") {
- const data = (await Threads.getData(idgr)).data || {};
- data.banned = 1;
- data.dateAdded = time;
- await Threads.setData(idgr, { data });
- global.data.threadBanned.set(idgr, { dateAdded: data.dateAdded });
- return api.sendMessage(`»Notifications from Owner ULL4SH«\n\n Group of Friends Have been banned from using bots by Ban.`, idgr, () =>
- api.sendMessage(`${api.getCurrentUserID()}`, () =>
- api.sendMessage(`★★BanSuccess★★\n\n🔷${groupName} \n🔰TID:${idgr}`, threadID, () =>
- api.unsendMessage(handleReply.messageID))));
- }
+  const { threadID, messageID } = event;
+  if (parseInt(event.senderID) !== parseInt(handleReply.author)) return;
+  const moment = require("moment-timezone");
+  const time = moment.tz("Asia/Dhaka").format("HH:mm:ss L");
+  var arg = event.body.split(" ");
+  var idgr = handleReply.groupid[arg[1] - 1];
+  var groupName = handleReply.groupName[arg[1] - 1];
 
- if (arg[0] == "unban" || arg[0] == "Unban" || arg[0] == "ub" || arg[0] == "Ub") {
- const data = (await Threads.getData(idgr)).data || {};
- data.banned = 0;
- data.dateAdded = null;
- await Threads.setData(idgr, { data });
- global.data.threadBanned.delete(idgr, 1);
- return api.sendMessage(`»Notifications from Owner ULL4SH«\n\n Group Of Friends That Have Been Removed Board`, idgr, () =>
- api.sendMessage(`${api.getCurrentUserID()}`, () =>
- api.sendMessage(`★★𝐔𝐧𝐛𝐚𝐧𝐒𝐮𝐜𝐜𝐞𝐬𝐬★★\n\n🔷${groupName} \n🔰𝐓𝐈𝐃:${idgr} `, threadID, () =>
- api.unsendMessage(handleReply.messageID))));
- }
+  if (!idgr) {
+    return api.sendMessage(`───────────────\n» ⚠️ 𝗜𝗻𝘃𝗮𝗹𝗶𝗱 𝘀𝗲𝗿𝗶𝗮𝗹 𝗻𝘂𝗺𝗯𝗲𝗿! 𝗣𝗹𝗲𝗮𝘀𝗲 𝗰𝗵𝗼𝗼𝘀𝗲 𝗰𝗼𝗿𝗿𝗲𝗰𝘁𝗹𝘆.\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, threadID, messageID);
+  }
 
- if (arg[0] == "del" || arg[0] == "Del") {
- const data = (await Threads.getData(idgr)).data || {};
- await Threads.delData(idgr, { data });
- console.log(groupName)
- api.sendMessage(`★★𝐃𝐞𝐥𝐒𝐮𝐜𝐜𝐞𝐬𝐬★★\n\n🔷${groupName} \n🔰𝐓𝐈𝐃: ${idgr} \n Successfully deleted the data!`, event.threadID, event.messageID);
- break;
- }
+  switch (handleReply.type) {
+    case "reply":
+      {
+        if (arg[0].toLowerCase() == "ban") {
+          const data = (await Threads.getData(idgr)).data || {};
+          data.banned = 1;
+          data.dateAdded = time;
+          await Threads.setData(idgr, { data });
+          global.data.threadBanned.set(idgr, { dateAdded: data.dateAdded });
+          
+          api.sendMessage(`───────────────\n» ⚠️ 𝗡𝗼𝘁𝗶𝗳𝗶𝗰𝗮𝘁𝗶𝗼𝗻\n» This group has been banned from using the bot.\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, idgr);
+          return api.sendMessage(`───────────────\n» 👑 𝗕𝗮𝗻 𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹\n» 🔷 𝗚𝗿𝗼𝘂𝗽: ${groupName}\n» 🔰 𝗧𝗜𝗗: ${idgr}\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, threadID, () => api.unsendMessage(handleReply.messageID));
+        }
 
- if (arg[0] == "out" || arg[0] == "Out") {
- api.sendMessage(`»Notifications from Owner ULL4SH«\n\n ★★Deleted from chat★★ group`, idgr, () =>
- api.sendMessage(`${api.getCurrentUserID()}`, () =>
- api.sendMessage(`★★𝐎𝐮𝐭𝐒𝐮𝐜𝐜𝐞𝐬𝐬★★\n\n🔷${groupName} \n🔰𝐓𝐈𝐃:${idgr} `, threadID, () =>
- api.unsendMessage(handleReply.messageID, () =>
- api.removeUserFromGroup(`${api.getCurrentUserID()}`, idgr)))));
- break;
- }
- }
- }
+        if (arg[0].toLowerCase() == "unban" || arg[0].toLowerCase() == "ub") {
+          const data = (await Threads.getData(idgr)).data || {};
+          data.banned = 0;
+          data.dateAdded = null;
+          await Threads.setData(idgr, { data });
+          global.data.threadBanned.delete(idgr);
+          
+          api.sendMessage(`───────────────\n» 🔊 𝗡𝗼𝘁𝗶𝗳𝗶𝗰𝗮𝘁𝗶𝗼𝗻\n» Ban lifted! Everyone can use the bot now.\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, idgr);
+          return api.sendMessage(`───────────────\n» ✨ 𝗨𝗻𝗯𝗮𝗻 𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹\n» 🔷 𝗚𝗿𝗼𝘂𝗽: ${groupName}\n» 🔰 𝗧𝗜𝗗: ${idgr}\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, threadID, () => api.unsendMessage(handleReply.messageID));
+        }
+
+        if (arg[0].toLowerCase() == "del") {
+          const data = (await Threads.getData(idgr)).data || {};
+          await Threads.delData(idgr, { data });
+          return api.sendMessage(`───────────────\n» 🗑️ 𝗗𝗲𝗹 𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹\n» 🔷 𝗚𝗿𝗼𝘂𝗽: ${groupName}\n» 🔰 𝗧𝗜𝗗: ${idgr}\n» Data deleted successfully!\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, threadID, () => api.unsendMessage(handleReply.messageID));
+        }
+
+        if (arg[0].toLowerCase() == "out") {
+          api.sendMessage(`───────────────\n» 🏃‍♂️ 𝗕𝗼𝘁 𝗶𝘀 𝗹𝗲𝗮𝘃𝗶𝗻𝗴 𝘁𝗵𝗶𝘀 𝗴𝗿𝗼𝘂𝗽...\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, idgr, () => {
+            api.removeUserFromGroup(`${api.getCurrentUserID()}`, idgr, () => {
+              return api.sendMessage(`───────────────\n» 🚪 𝗢𝘂𝘁 𝗦𝘂𝗰𝗰𝗲𝘀𝘀\n» 🔷 𝗚𝗿𝗼𝘂𝗽: ${groupName}\n» 🔰 𝗧𝗜𝗗: ${idgr}\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, threadID, () => api.unsendMessage(handleReply.messageID));
+            });
+          });
+        }
+      }
+      break;
+  }
 };
+
 module.exports.run = async function ({ api, event, args }) {
- switch (args[0]) {
- case "all":
- {
- var threadList = [];
- var data, msg = "";
- /////////
- try {
- data = await api.getThreadList(100, null, ["INBOX"]);
- } catch (e) {
- console.log(e);
- }
- for (const thread of data) {
- if (thread.isGroup == true) threadList.push({ threadName: thread.name, threadID: thread.threadID, messageCount: thread.messageCount });
- }
- /////////////////////////////////////////////////////
- //===== sắp xếp từ cao đến thấp cho từng nhóm =====//
- threadList.sort((a, b) => {
- if (a.messageCount > b.messageCount) return -1;
- if (a.messageCount < b.messageCount) return 1;
- })
+  const { threadID, messageID } = event;
+  var threadList = [];
+  var data;
 
- var groupid = [];
- var groupName = [];
- var page = 1;
- page = parseInt(args[0]) || 1;
- page < -1 ? page = 1 : "";
- var limit = 100;
- var msg = "🎭DS GROUP [Data]🎭\n\n";
- var numPage = Math.ceil(threadList.length / limit);
+  try {
+    data = await api.getThreadList(100, null, ["INBOX"]) || [];
+  } catch (e) {
+    console.log(e);
+    return api.sendMessage("───────────────\n» ❌ 𝗘𝗿𝗿𝗼𝗿 𝗳𝗲𝘁𝗰𝗵𝗶𝗻𝗴 𝘁𝗵𝗿𝗲𝗮𝗱 𝗹𝗶𝘀𝘁.\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍", threadID, messageID);
+  }
 
- for (var i = limit * (page - 1); i < limit * (page - 1) + limit; i++) {
- if (i >= threadList.length) break;
- let group = threadList[i];
- msg += `${i + 1}. ${group.threadName}\n🔰𝐓𝐈𝐃: ${group.threadID}\n💌𝐌𝐞𝐬𝐬𝐚𝐠𝐞𝐂𝐨𝐮𝐧𝐭: ${group.messageCount}\n`;
- groupid.push(group.threadID);
- groupName.push(group.threadName);
- }
- msg += `--Page ${page}/${numPage}--\nDy ${global.config.PREFIX}allbox page number/all\n\n`
+  for (const thread of data) {
+    if (thread.isGroup == true) {
+      threadList.push({ threadName: thread.name || "No Name Group", threadID: thread.threadID, messageCount: thread.messageCount });
+    }
+  }
 
- api.sendMessage(msg + '🎭Reply Out, Ban, Unban, Del[data] the order number to Out, Ban, Unban, Del[data] that thread!', event.threadID, (e, data) =>
- global.client.handleReply.push({
- name: this.config.name,
- author: event.senderID,
- messageID: data.messageID,
- groupid,
- groupName,
- type: 'reply'
- })
- )
- }
- break;
+  threadList.sort((a, b) => b.messageCount - a.messageCount);
 
- default:
- /*
- var threadList = [];
- var data, msg = "";
- /////////
- try {
- data = await api.getThreadList(1000, null, ["INBOX"]);
- } catch (e) {
- console.log(e);
- }
- for (const thread of data) {
- if (thread.isGroup == true) threadList.push({ threadName: thread.name, threadID: thread.threadID, messageCount: thread.messageCount });
- }
- /////////////////////////////////////////////////////
- //===== sắp xếp từ cao đến thấp cho từng nhóm =====//
- threadList.sort((a, b) => {
- if (a.messageCount > b.messageCount) return -1;
- if (a.messageCount < b.messageCount) return 1;
- })
+  var groupid = [];
+  var groupName = [];
+  var page = parseInt(args[0]) || 1;
+  if (page < 1) page = 1;
+  var limit = (args[0] == "all") ? threadList.length : 10;
+  var numPage = Math.ceil(threadList.length / 10);
 
- var groupid = [];
- var groupName = [];
- var page = 1;
- page = parseInt(args[0]) || 1;
- page < -1 ? page = 1 : "";
- var limit = 10;
- var msg = "🎭DS NHÓM [Data]🎭\n\n";
- var numPage = Math.ceil(threadList.length / limit);
+  var msg = "───────────────\n» 🎭 𝗕𝗢𝗧 𝗚𝗥𝗢𝗨𝗣 𝗟𝗜𝗦𝗧 🎭\n───────────────\n";
 
- for (var i = limit * (page - 1); i < limit * (page - 1) + limit; i++) {
- if (i >= threadList.length) break;
- let group = threadList[i];
- msg += `${i+1}. ${group.threadName}\n🔰𝐓𝐈𝐃: ${group.threadID}\n💌MessageCount: ${group.messageCount}\n\n`;
- groupid.push(group.threadID);
- groupName.push(group.threadName);
- }
- msg += `--Trang ${page}/${numPage}--\nDùng ${global.config.PREFIX}allbox + số trang/all\n\n`
+  let start = (args[0] == "all") ? 0 : 10 * (page - 1);
+  let end = (args[0] == "all") ? threadList.length : start + limit;
 
- api.sendMessage(msg + '🎭Reply Out, Ban, Unban, Del[data]+ số thứ tự để Out, Ban, Unban, Del[data] thread đó!', event.threadID, (e, data) =>
- global.client.handleReply.push({
- name: this.config.name,
- author: event.senderID,
- messageID: data.messageID,
- groupid,
- groupName,
- type: 'reply'
- })
- );
- break;
- }*/
+  for (var i = start; i < end; i++) {
+    if (i >= threadList.length) break;
+    let group = threadList[i];
+    msg += `» ${i + 1}. ${group.threadName}\n» 🔰 𝗧𝗜𝗗: ${group.threadID}\n» 💌 𝗠𝘀𝗴: ${group.messageCount}\n\n`;
+    groupid.push(group.threadID);
+    groupName.push(group.threadName);
+  }
 
- const { threadID, messageID } = event;
- var threadList = [];
- var data, msg = "";
- i = 1;
- /////////
- try {
-		 //var listUserID = event.participantIDs.filter(ID => ID);
- data = global.data.allThreadID;
-		
- } catch (e) {
- console.log(e);
- }
- for (const thread of data) {
- var nameThread = await global.data.threadInfo.get(thread).threadName || "The name doesn't exist.";
- threadList.push(`${i++}. ${nameThread} \n🔰𝐓𝐈𝐃: ${thread}`);
-		 //console.log(`${nameThread}`);
- }
- 
-	 return api.sendMessage(threadList.length != 0 ? api.sendMessage(`🍄There is currently ${threadList.length} group\n\n${threadList.join("\n")}`,
- threadID,
- messageID
- ) : "There is currently no group!", threadID, messageID);
- 
- }
- };
+  msg += `───────────────\n» 📄 𝗣𝗮𝗴𝗲: ${args[0] == "all" ? "1/1" : page + "/" + numPage}\n» ℹ️ 𝗥𝗲𝗽𝗹𝘆 𝘄𝗶𝘁𝗵: [𝗢𝘂𝘁 / 𝗕𝗮𝗻 / 𝗨𝗻𝗯𝗮𝗻 / 𝗗𝗲𝗹] + 𝘀𝗲𝗿𝗶𝗮𝗹\n» 🤖 𝗖𝗿𝗲𝗮𝘁𝗲𝗱 𝗯𝘆: ─꯭─⃝‌‌𝗦𝗶𝘆𝗮𝗺 𝗖𝗵𝗮𝘁 𝗕𝗼𝘁\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`;
+
+  if (threadList.length == 0) {
+    return api.sendMessage("───────────────\n» 🚫 𝗧𝗵𝗲𝗿𝗲 𝗶𝘀 𝗰𝘂𝗿𝗿𝗲𝗻𝘁𝗹𝘆 𝗻𝗼 𝗴𝗿𝗼𝘂𝗽!\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍", threadID, messageID);
+  }
+
+  api.sendMessage(msg, threadID, (e, info) => {
+    if (!e) {
+      global.client.handleReply.push({
+        name: this.config.name,
+        author: event.senderID,
+        messageID: info.messageID,
+        groupid,
+        groupName,
+        type: 'reply'
+      });
+    }
+  }, messageID);
+};
