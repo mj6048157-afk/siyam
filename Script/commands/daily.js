@@ -2,7 +2,7 @@ module.exports.config = {
     name: "daily",
     version: "2.0.0",
     hasPermssion: 0,
-    credits: "SHAHADAT SAHU",
+    credits: "𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
     description: "Claim daily coins with cooldown",
     commandCategory: "economy",
     cooldowns: 5,
@@ -12,14 +12,7 @@ module.exports.config = {
     }
 };
 
-module.exports.languages = {
-    "en": {
-        "cooldown": "⏳ You already claimed today's reward. Please come back after: %1 hours %2 minutes %3 seconds.",
-        "rewarded": "🎉 You received %1 coins! Come back again in 12 hours."
-    }
-};
-
-module.exports.run = async ({ event, api, Currencies, getText }) => {
+module.exports.run = async ({ event, api, Currencies }) => {
     const { cooldownTime } = module.exports.config.envConfig;
     const { senderID, threadID, messageID } = event;
 
@@ -34,8 +27,10 @@ module.exports.run = async ({ event, api, Currencies, getText }) => {
             let minutes = Math.floor((remaining / 1000 / 60) % 60);
             let hours = Math.floor(remaining / (1000 * 60 * 60));
 
+            let formattedSec = (seconds < 10 ? "0" : "") + seconds;
+            
             return api.sendMessage(
-                getText("cooldown", hours, minutes, (seconds < 10 ? "0" : "") + seconds),
+                `───────────────\n\n» ⏳ 𝗬𝗼𝘂 𝗮𝗹𝗿𝗲𝗮𝗱𝘆 𝗰𝗹𝗮𝗶𝗺𝗲𝗱 𝘁𝗼𝗱𝗮𝘆'𝘀 𝗿𝗲𝘄𝗮𝗿𝗱. 𝗣𝗹𝗲𝗮𝘀𝗲 𝗰𝗼𝗺𝗲 𝗯𝗮𝗰𝗸 𝗮𝗳𝘁𝗲𝗿: ${hours} 𝗵𝗼𝘂𝗿𝘀 ${minutes} 𝗺𝗶𝗻𝘂𝘁𝗲𝘀 ${formattedSec} 𝘀𝗲𝗰𝗼𝗻𝗱𝘀.\n\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`,
                 threadID,
                 messageID
             );
@@ -49,11 +44,15 @@ module.exports.run = async ({ event, api, Currencies, getText }) => {
         await Currencies.setData(senderID, { data: userData });
 
         return api.sendMessage(
-            getText("rewarded", rewardCoin.toLocaleString("en-US")),
+            `───────────────\n\n» 🎉 𝗬𝗼𝘂 𝗿𝗲𝗰𝗲𝗶𝘃𝗲𝗱 ${rewardCoin.toLocaleString("en-US")} 𝗰𝗼𝗶𝗻𝘀! 𝗖𝗼𝗺𝗲 𝗯𝗮𝗰𝗸 𝗮𝗴𝗮𝗶𝗻 𝗶𝗻 𝟭𝟮 𝗵𝗼𝘂𝗿𝘀.\n\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`,
             threadID,
             messageID
         );
     } catch (err) {
-        return api.sendMessage("⚠️ Error: " + err.message, threadID, messageID);
+        return api.sendMessage(
+            `───────────────\n\n» ❌ 𝗔𝗣𝗜 𝗘𝗿𝗿𝗼𝗿 𝗖𝗮𝗹𝗹 𝗦𝗶𝘆𝗮𝗺. ${err.message}\n\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`,
+            threadID,
+            messageID
+        );
     }
 };
