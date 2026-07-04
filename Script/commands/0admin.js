@@ -16,14 +16,14 @@ module.exports.config = {
 
 module.exports.languages = {
   en: {
-    listAdmin: "───────────────\n» 👑 𝗔𝗱𝗺𝗶𝗻 𝗟𝗶𝘀𝘁:\n\n%1\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
-    noPermission: "───────────────\n» ❎ 𝗬𝗼𝘂 𝗱𝗼𝗻'𝘁 𝗵𝗮𝘃𝗲 𝗽𝗲𝗿𝗺𝗶𝘀𝘀𝗶𝗼𝗻 𝘁𝗼 𝘂𝘀𝗲 \"%1\"\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
-    addedAdmin: "───────────────\n» ✅ 𝗔𝗱𝗱𝗲𝗱 %1 𝗮𝗱𝗺𝗶𝗻(𝘀):\n\n%2\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
-    removedAdmin: "───────────────\n» ✅ 𝗥𝗲𝗺𝗼𝘃𝗲𝗱 %1 𝗮𝗱𝗺𝗶𝗻(𝘀):\n\n%2\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀停",
-    adminOnlyOn: "───────────────\n» 🔓 𝗔𝗱𝗺𝗶𝗻-𝗼𝗻𝗹𝘆 𝗺𝗼𝗱𝗲 𝗲𝗻𝗮𝗯𝗹𝗲𝗱\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
-    adminOnlyOff: "───────────────\n» ✅ 𝗔𝗱𝗺𝗶𝗻-𝗼𝗻𝗹𝘆 𝗺𝗼𝗱𝗲 𝗱𝗶𝘀𝗮𝗯𝗹𝗲𝗱\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
-    boxOnlyOn: "───────────────\n» 🔓 𝗚𝗿𝗼𝘂𝗽 𝗮𝗱𝗺𝗶𝗻-𝗼𝗻𝗹𝘆 𝗺𝗼𝗱𝗲 𝗲𝗻𝗮𝗯𝗹𝗲𝗱\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
-    boxOnlyOff: "───────────────\n» ✅ 𝗚𝗿𝗼𝘂𝗽 𝗮𝗱𝗺𝗶𝗻-𝗼𝗻𝗹𝘆 𝗺𝗼𝗱𝗲 𝗱𝗶𝘀𝗮𝗯𝗹𝗲𝗱\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍"
+    listAdmin: "───────────────\n\n» 👑 𝗔𝗱𝗺𝗶𝗻 𝗟𝗶𝘀𝘁:\n\n%1\n\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
+    noPermission: "───────────────\n\n» ❎ 𝗬𝗼𝘂 𝗱𝗼𝗻'𝘁 𝗵𝗮𝘃𝗲 𝗽𝗲𝗿𝗺𝗶𝘀𝘀𝗶𝗼𝗻 𝘁𝗼 𝘂𝘀𝗲 \"%1\"\n\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀逆",
+    addedAdmin: "───────────────\n\n» ✅ 𝗔𝗱𝗱𝗲𝗱 %1 𝗮𝗱𝗺𝗶𝗻(𝘀):\n\n%2\n\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
+    removedAdmin: "───────────────\n\n» ✅ <b>𝗥𝗲𝗺𝗼𝘃𝗲𝗱 %1 𝗮𝗱𝗺𝗶𝗻(𝘀):</b>\n\n%2\n\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
+    adminOnlyOn: "───────────────\n\n» 🔓 𝗔𝗱𝗺𝗶𝗻-𝗼𝗻𝗹𝘆 𝗺𝗼𝗱𝗲 𝗲𝗻𝗮𝗯𝗹𝗲𝗱\n\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
+    adminOnlyOff: "───────────────\n\n» ✅ <b>𝗔𝗱𝗺𝗶𝗻-𝗼𝗻𝗹𝘆 <b>𝗺𝗼𝗱𝗲 𝗱𝗶𝘀𝗮𝗯𝗹𝗲𝗱</b>\n\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
+    boxOnlyOn: "───────────────\n\n» 🔓 𝗚𝗿𝗼𝘂𝗽 𝗮𝗱𝗺𝗶𝗻-𝗼𝗻𝗹𝘆 𝗺𝗼𝗱𝗲 𝗲𝗻𝗮𝗯𝗹𝗲𝗱\n\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
+    boxOnlyOff: "───────────────\n\n» ✅ 𝗚𝗿𝗼𝘂𝗽 𝗮𝗱𝗺𝗶𝗻-𝗼𝗻𝗹𝘆 𝗺𝗼𝗱𝗲 𝗱𝗶𝘀𝗮𝗯𝗹𝗲𝗱\n\n───────────────\n» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍"
   }
 };
 
@@ -62,7 +62,7 @@ module.exports.run = async function ({ api, event, args, Users, permssion, getTe
     }
 
     case "add": {
-      if (permssion != 3) return api.sendMessage(getText("noPermission", "add"), threadID, messageID);
+      if (permssion != 3) return api.sendMessage(getText("noPermission", "𝗮𝗱𝗱"), threadID, messageID);
       const ids = getUIDs();
       const added = [];
 
@@ -81,7 +81,7 @@ module.exports.run = async function ({ api, event, args, Users, permssion, getTe
 
     case "remove":
     case "rm": {
-      if (permssion != 3) return api.sendMessage(getText("noPermission", "remove"), threadID, messageID);
+      if (permssion != 3) return api.sendMessage(getText("noPermission", "𝗿𝗲𝗺𝗼𝘃𝗲"), threadID, messageID);
       const ids = getUIDs();
       const removed = [];
 
@@ -100,14 +100,14 @@ module.exports.run = async function ({ api, event, args, Users, permssion, getTe
     }
 
     case "only": {
-      if (permssion != 3) return api.sendMessage(getText("noPermission", "only"), threadID, messageID);
+      if (permssion != 3) return api.sendMessage(getText("noPermission", "𝗼𝗻𝗹𝘆"), threadID, messageID);
       config.adminOnly = !config.adminOnly;
       writeFileSync(configPath, JSON.stringify(config, null, 4));
       return api.sendMessage(config.adminOnly ? getText("adminOnlyOn") : getText("adminOnlyOff"), threadID, messageID);
     }
 
     case "boxonly": {
-      if (permssion != 3) return api.sendMessage(getText("noPermission", "boxonly"), threadID, messageID);
+      if (permssion != 3) return api.sendMessage(getText("noPermission", "𝗯𝗼𝘅𝗼𝗻𝗹𝘆"), threadID, messageID);
       const path = resolve(__dirname, "cache", "data.json");
       delete require.cache[require.resolve(path)];
       const database = require(path);
