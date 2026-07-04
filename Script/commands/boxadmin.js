@@ -2,7 +2,7 @@ module.exports.config = {
   name: "boxadmin",
   version: "1.0.0",
   hasPermssion: 2,
-  credits: "SHAHADAT SAHU",
+  credits: "𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍",
   description: "Add/remove admin via me, mention, or reply",
   commandCategory: "system",
   usages: "boxadmin me | boxadmin add/remove @mention | reply",
@@ -23,8 +23,16 @@ module.exports.run = async function({ api, event, args }) {
 
     if (action === "me") action = "add";
 
-    if (!["add", "remove"].includes(action)) 
-      return api.sendMessage("🌸 Usage : boxadmin me | boxadmin add/remove @mention | reply", threadID, event.messageID);
+    if (!["add", "remove"].includes(action)) {
+      return api.sendMessage(
+`───────────────
+
+» 🌸 𝗨𝘀𝗮𝗴𝗲 : 𝗯𝗼𝘅𝗮𝗱𝗺Block𝗻 𝗺𝗲 | 𝗯𝗼𝘅𝗮𝗱𝗺Block𝗻 𝗮𝗱𝗱/𝗿𝗲𝗺𝗼𝘃𝗲 @𝗺𝗲𝗻𝘁Block𝗼𝗻 | 𝗿𝗲𝗽𝗹𝘆
+
+───────────────
+
+» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, threadID, event.messageID);
+    }
 
     let uid;
     let targetName;
@@ -38,11 +46,17 @@ module.exports.run = async function({ api, event, args }) {
     } else if (args[1]?.toLowerCase() === "me") {
       uid = event.senderID;
     } else {
-      return api.sendMessage("🌸 Usage : boxadmin me | boxadmin add/remove @mention | reply", threadID, event.messageID);
+      return api.sendMessage(
+`───────────────
+
+» 🌸 𝗨𝘀𝗮𝗴𝗲 : 𝗯𝗼𝘅𝗮𝗱𝗺Block𝗻 𝗺𝗲 | 𝗯𝗼𝘅𝗮𝗱𝗺 𝗮𝗱𝗱/𝗿𝗲𝗺𝗼𝘃𝗲 @𝗺𝗲𝗻𝘁Block𝗼𝗻 | 𝗿𝗲𝗽𝗹𝘆
+
+───────────────
+
+» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, threadID, event.messageID);
     }
 
     const userInfo = await api.getUserInfo([uid, event.senderID]);
-    
     const senderName = cleanName(userInfo[event.senderID]?.name) || "আপনি";
     
     if (event.mentions && Object.keys(event.mentions).length > 0) {
@@ -53,37 +67,98 @@ module.exports.run = async function({ api, event, args }) {
       targetName = cleanName(userInfo[uid]?.name);
     }
     
-    if (!targetName) targetName = "User";
+    if (!targetName) targetName = "𝗨𝘀𝗲𝗿";
 
     const threadInfo = await api.getThreadInfo(threadID);
     const botIsAdmin = threadInfo.adminIDs.some(admin => admin.id == botID);
     const targetIsAdmin = threadInfo.adminIDs.some(admin => admin.id == uid);
 
-    if (!botIsAdmin && uid !== event.senderID) 
-      return api.sendMessage("এই কমান্ডটি Usage  করার জন্য আগে আমাকে গ্রুপের এডমিন দিতে হবে 🌺", threadID, event.messageID);
+    if (!botIsAdmin && uid !== event.senderID) {
+      return api.sendMessage(
+`───────────────
+
+» ⚠️ এই কমান্ডটি 𝗨𝘀𝗮𝗴𝗲 করার জন্য আগে আমাকে গ্রুপের এডমিন দিতে হবে।
+
+───────────────
+
+» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, threadID, event.messageID);
+    }
 
     if (action === "add") {
-      if (targetIsAdmin) 
-        return api.sendMessage(`${targetName} আগে থেকেই গ্রুপের এডমিন রয়েছেন ✅`, threadID, event.messageID);
+      if (targetIsAdmin) {
+        return api.sendMessage(
+`───────────────
+
+» ✅ ${targetName} আগে থেকেই গ্রুপের এডমিন রয়েছেন।
+
+───────────────
+
+» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, threadID, event.messageID);
+      }
 
       await api.changeAdminStatus(threadID, uid, true);
-      if (uid === event.senderID) 
-        return api.sendMessage(`✅ ${senderName} নিজেকে এডমিন বানিয়েছে! 🌸`, threadID, event.messageID);
-      else 
-        return api.sendMessage(`✅ ${senderName} ${targetName}-কে এডমিন বানিয়েছে! 😘`, threadID, event.messageID);
+      if (uid === event.senderID) {
+        return api.sendMessage(
+`───────────────
+
+» 💖 ${senderName} নিজেকে এডমিন বানিয়েছে!
+
+───────────────
+
+» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀延`, threadID, event.messageID);
+      } else {
+        return api.sendMessage(
+`───────────────
+
+» 🎉 ${senderName} ${targetName}-কে এডমিন বানিয়েছে!
+
+───────────────
+
+» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, threadID, event.messageID);
+      }
 
     } else if (action === "remove") {
-      if (!targetIsAdmin) 
-        return api.sendMessage(`${targetName} এখনো গ্রুপের এডমিন নয়! ❌`, threadID, event.messageID);
+      if (!targetIsAdmin) {
+        return api.sendMessage(
+`───────────────
+
+» ❌ ${targetName} এখনো গ্রুপের এডমিন নয়!
+
+───────────────
+
+» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, threadID, event.messageID);
+      }
 
       await api.changeAdminStatus(threadID, uid, false);
-      if (uid === event.senderID) 
-        return api.sendMessage(` ${senderName} নিজেকে এডমিন থেকে রিমুভ করেছে! 🐸`, threadID, event.messageID);
-      else 
-        return api.sendMessage(` ${targetName} কে এডমিন থেকে রিমুভ করেছে! 🤣`, threadID, event.messageID);
+      if (uid === event.senderID) {
+        return api.sendMessage(
+`───────────────
+
+» ⚙️ ${senderName} নিজেকে এডমিন থেকে রিমুভ করেছে!
+
+───────────────
+
+» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, threadID, event.messageID);
+      } else {
+        return api.sendMessage(
+`───────────────
+
+» 🗑️ ${senderName} ${targetName} কে এডমিন থেকে রিমুভ করেছে!
+
+───────────────
+
+» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, threadID, event.messageID);
+      }
     }
 
   } catch (e) {
-    return api.sendMessage("⚠️ Error: " + e.message, threadID, event.messageID);
+    return api.sendMessage(
+`───────────────
+
+» ⚠️ 𝗘𝗿𝗿𝗼𝗿: ${e.message}
+
+───────────────
+
+» 👤 𝆠፝𝐒𝐈𝐘𝐀𝐌-𝐇𝐀𝐒𝐀𝐍`, threadID, event.messageID);
   }
 };
